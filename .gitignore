@@ -1,0 +1,9 @@
+node_modules
+dist
+.DS_Store
+
+# Textures vanilla déposées localement pour référence visuelle uniquement.
+# Soumises au droit d'auteur de Mojang -> jamais publiées sur le dépôt.
+# Voir public/vanilla-reference/README.md
+public/vanilla-reference/*
+!public/vanilla-reference/README.md
