@@ -1121,3 +1121,42 @@
   padding: 0.6rem 1.2rem;
   font-weight: 600;
 }
+
+/* --- Export/import de la sélection --- */
+
+.summary__io {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.summary__io-button {
+  background: var(--panel-raised);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.7rem;
+  font-size: 0.78rem;
+  font-family: var(--font-body);
+  transition: border-color 0.15s var(--ease), color 0.15s var(--ease);
+}
+
+.summary__io-button:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.summary__io-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.summary__io-error {
+  margin: 0.6rem 0 0;
+  font-size: 0.75rem;
+  color: var(--danger);
+  line-height: 1.4;
+}

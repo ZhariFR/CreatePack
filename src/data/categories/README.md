@@ -32,7 +32,8 @@ Une pièce d'armure a en réalité DEUX textures bien distinctes :
   par pièce.
 - **Le rendu porté** (ce qui s'affiche sur le personnage) : `textures/models/armor/<materiau>_1.png`
   (casque + plastron + bottes, PARTAGÉ entre les 3) et `<materiau>_2.png`
-  (jambières, à part).
+  (jambières, à part). ⚠️ Bedrock nomme ces fichiers `_1`/`_2` — PAS
+  `_layer_1`/`_layer_2`, qui est la convention Java (différente).
 
 Comme un joueur ne choisit jamais des pièces dépareillées, l'armure utilise
 un slot **"set"** : UN SEUL choix qui produit PLUSIEURS fichiers à la fois
@@ -62,8 +63,8 @@ un slot **"set"** : UN SEUL choix qui produit PLUSIEURS fichiers à la fois
         icon_chestplate: "textures/armor/<fichier>_chestplate.png",
         icon_leggings: "textures/armor/<fichier>_leggings.png",
         icon_boots: "textures/armor/<fichier>_boots.png",
-        layer1: "textures/armor/<fichier>_layer1.png",
-        layer2: "textures/armor/<fichier>_layer2.png",
+        layer1: "textures/armor/<fichier>_1.png",
+        layer2: "textures/armor/<fichier>_2.png",
       },
     },
   ],

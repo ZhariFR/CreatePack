@@ -1,6 +1,7 @@
 // Vérifie l'intégrité de src/data/categories/ AVANT de tester dans le
-// navigateur : détecte les ids en double, les targetPath dupliqués, et les
-// fichiers image référencés qui n'existent pas réellement dans /public.
+// navigateur. Utile en particulier pour relire ce qu'un collaborateur a ajouté :
+// détecte les ids en double, les targetPath dupliqués, et les fichiers
+// image référencés qui n'existent pas réellement dans /public.
 //
 // Gère les 3 types de slots : simple (targetPath+variants), multi-face
 // (faces: [...]), et "set" (outputs+variants avec un files{} par variante).

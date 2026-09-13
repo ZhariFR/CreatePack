@@ -1,0 +1,208 @@
+// Catégorie "Matériaux" — tuiles vides (pas encore de texture dans la
+// bibliothèque), à remplir en uploadant sa propre image sur le site.
+// targetPath vérifiés contre item_texture.json (Mojang/bedrock-samples).
+
+export const materiaux = {
+  id: "materiaux",
+  label: "Matériaux",
+  slots: [
+    {
+      id: "blaze_powder",
+      label: "Poudre de Blaze",
+      targetPath: "textures/items/blaze_powder.png",
+      variants: [],
+    },
+    {
+      id: "blaze_rod",
+      label: "Bâton de Blaze",
+      targetPath: "textures/items/blaze_rod.png",
+      variants: [],
+    },
+    {
+      id: "bone",
+      label: "Os",
+      targetPath: "textures/items/bone.png",
+      variants: [],
+    },
+    {
+      id: "brick",
+      label: "Brique",
+      targetPath: "textures/items/brick.png",
+      variants: [],
+    },
+    {
+      id: "charcoal",
+      label: "Charbon de bois",
+      targetPath: "textures/items/charcoal.png",
+      variants: [],
+    },
+    {
+      id: "clay_ball",
+      label: "Boule d'argile",
+      targetPath: "textures/items/clay_ball.png",
+      variants: [],
+    },
+    {
+      id: "coal",
+      label: "Charbon",
+      targetPath: "textures/items/coal.png",
+      variants: [],
+    },
+    {
+      id: "diamond",
+      label: "Diamant",
+      targetPath: "textures/items/diamond.png",
+      variants: [],
+    },
+    {
+      id: "emerald",
+      label: "Émeraude",
+      targetPath: "textures/items/emerald.png",
+      variants: [],
+    },
+    {
+      id: "ender_eye",
+      label: "Œil de l'Ender",
+      targetPath: "textures/items/ender_eye.png",
+      variants: [],
+    },
+    {
+      id: "ender_pearl",
+      label: "Perle de l'Ender",
+      targetPath: "textures/items/ender_pearl.png",
+      variants: [],
+    },
+    {
+      id: "feather",
+      label: "Plume",
+      targetPath: "textures/items/feather.png",
+      variants: [],
+    },
+    {
+      id: "flint",
+      label: "Silex",
+      targetPath: "textures/items/flint.png",
+      variants: [],
+    },
+    {
+      id: "ghast_tear",
+      label: "Larme de Ghast",
+      targetPath: "textures/items/ghast_tear.png",
+      variants: [],
+    },
+    {
+      id: "glowstone_dust",
+      label: "Poudre de pierre lumineuse",
+      targetPath: "textures/items/glowstone_dust.png",
+      variants: [],
+    },
+    {
+      id: "gold_ingot",
+      label: "Lingot d'or",
+      targetPath: "textures/items/gold_ingot.png",
+      variants: [],
+    },
+    {
+      id: "gold_nugget",
+      label: "Pépite d'or",
+      targetPath: "textures/items/gold_nugget.png",
+      variants: [],
+    },
+    {
+      id: "gunpowder",
+      label: "Poudre à canon",
+      targetPath: "textures/items/gunpowder.png",
+      variants: [],
+    },
+    {
+      id: "iron_ingot",
+      label: "Lingot de fer",
+      targetPath: "textures/items/iron_ingot.png",
+      variants: [],
+    },
+    {
+      id: "leather",
+      label: "Cuir",
+      targetPath: "textures/items/leather.png",
+      variants: [],
+    },
+    {
+      id: "magma_cream",
+      label: "Crème de magma",
+      targetPath: "textures/items/magma_cream.png",
+      variants: [],
+    },
+    {
+      id: "nether_star",
+      label: "Étoile du Nether",
+      targetPath: "textures/items/nether_star.png",
+      variants: [],
+    },
+    {
+      id: "netherbrick",
+      label: "Brique du Nether",
+      targetPath: "textures/items/netherbrick.png",
+      variants: [],
+    },
+    {
+      id: "prismarine_crystals",
+      label: "Cristaux de prismarine",
+      targetPath: "textures/items/prismarine_crystals.png",
+      variants: [],
+    },
+    {
+      id: "prismarine_shard",
+      label: "Éclat de prismarine",
+      targetPath: "textures/items/prismarine_shard.png",
+      variants: [],
+    },
+    {
+      id: "quartz",
+      label: "Quartz du Nether",
+      targetPath: "textures/items/quartz.png",
+      variants: [],
+    },
+    {
+      id: "rabbit_foot",
+      label: "Patte de lapin",
+      targetPath: "textures/items/rabbit_foot.png",
+      variants: [],
+    },
+    {
+      id: "rabbit_hide",
+      label: "Peau de lapin",
+      targetPath: "textures/items/rabbit_hide.png",
+      variants: [],
+    },
+    {
+      id: "redstone_dust",
+      label: "Poudre de redstone",
+      targetPath: "textures/items/redstone_dust.png",
+      variants: [],
+    },
+    {
+      id: "slimeball",
+      label: "Boule de slime",
+      targetPath: "textures/items/slimeball.png",
+      variants: [],
+    },
+    {
+      id: "spider_eye",
+      label: "Œil d'araignée",
+      targetPath: "textures/items/spider_eye.png",
+      variants: [],
+    },
+    {
+      id: "spider_eye_fermented",
+      label: "Œil d'araignée fermenté",
+      targetPath: "textures/items/spider_eye_fermented.png",
+      variants: [],
+    },
+    {
+      id: "string",
+      label: "Fil",
+      targetPath: "textures/items/string.png",
+      variants: [],
+    },
+  ],
+};

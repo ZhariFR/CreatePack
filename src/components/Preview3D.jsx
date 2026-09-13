@@ -120,17 +120,13 @@ function buildVoxelGeometry({ imageData, width, height }) {
 
 // Applique un mapping UV façon "boîte Minecraft" (patron déplié en croix)
 // sur un BoxGeometry three.js, pour une région (u,v,w,h,d) d'une image
-// imgW x imgH. mirror=true inverse horizontalement (bras/jambe gauche,
-// qui réutilisent la même région que le côté droit en miroir).
+// imgW x imgH. mirror=true : la face droite prend la région gauche et
+// vice-versa (comme Minecraft "miroir" un bras/jambe gauche par rapport au
+// droit), les faces haut/bas/avant/arrière sont retournées horizontalement.
 function applyBoxUV(geometry, { u, v, w, h, d, imgW, imgH, mirror = false }) {
   const uvAttr = geometry.attributes.uv;
 
   function setFaceUV(face, x0, y0, x1, y1) {
-    if (mirror) {
-      const tmp = x0;
-      x0 = x1;
-      x1 = tmp;
-    }
     const u0 = x0 / imgW, u1 = x1 / imgW;
     const v0 = 1 - y0 / imgH, v1 = 1 - y1 / imgH;
     const base = face * 4;
@@ -140,21 +136,41 @@ function applyBoxUV(geometry, { u, v, w, h, d, imgW, imgH, mirror = false }) {
     uvAttr.setXY(base + 3, u1, v1);
   }
 
-  setFaceUV(0, u, v + d, u + d, v + d + h); // droite
-  setFaceUV(1, u + d + w, v + d, u + d + w + d, v + d + h); // gauche
-  setFaceUV(2, u + d, v, u + d + w, v + d); // haut
-  setFaceUV(3, u + d + w, v, u + d + w + w, v + d); // bas
-  setFaceUV(4, u + d, v + d, u + d + w, v + d + h); // avant
-  setFaceUV(5, u + d + w + d, v + d, u + d + w + d + w, v + d + h); // arrière
+  const rightRect = [u, v + d, u + d, v + d + h];
+  const leftRect = [u + d + w, v + d, u + d + w + d, v + d + h];
+  const topRect = [u + d, v, u + d + w, v + d];
+  const bottomRect = [u + d + w, v, u + d + w + w, v + d];
+  const frontRect = [u + d, v + d, u + d + w, v + d + h];
+  const backRect = [u + d + w + d, v + d, u + d + w + d + w, v + d + h];
+
+  if (mirror) {
+    setFaceUV(0, ...leftRect); // la face droite du membre miroir prend la région gauche du patron
+    setFaceUV(1, ...rightRect); // et inversement
+    // haut/bas/avant/arrière : retournés horizontalement (x0/x1 inversés)
+    setFaceUV(2, topRect[2], topRect[1], topRect[0], topRect[3]);
+    setFaceUV(3, bottomRect[2], bottomRect[1], bottomRect[0], bottomRect[3]);
+    setFaceUV(4, frontRect[2], frontRect[1], frontRect[0], frontRect[3]);
+    setFaceUV(5, backRect[2], backRect[1], backRect[0], backRect[3]);
+  } else {
+    setFaceUV(0, ...rightRect);
+    setFaceUV(1, ...leftRect);
+    setFaceUV(2, ...topRect);
+    setFaceUV(3, ...bottomRect);
+    setFaceUV(4, ...frontRect);
+    setFaceUV(5, ...backRect);
+  }
 
   uvAttr.needsUpdate = true;
 }
 
-function buildLimb(scene, { pw, ph, pd, x, y, z, u, v, imgW, imgH, mirror = false }) {
+// Construit un membre (tête/torse/bras/jambe) SANS encore poser l'UV — elle
+// sera appliquée une fois la vraie texture chargée, avec ses dimensions
+// réelles (voir applyTextures ci-dessous), pas une taille supposée en dur.
+function buildLimb(scene, { pw, ph, pd, x, y, z, u, v, mirror = false }) {
   const geometry = new THREE.BoxGeometry(pw * SCALE, ph * SCALE, pd * SCALE);
-  applyBoxUV(geometry, { u, v, w: pw, h: ph, d: pd, imgW, imgH, mirror });
   const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: FALLBACK_COLOR }));
   mesh.position.set(x, y, z);
+  mesh.userData.uvSpec = { u, v, w: pw, h: ph, d: pd, mirror };
   scene.add(mesh);
   return mesh;
 }
@@ -210,12 +226,12 @@ export default function Preview3D({ mode, faceSelections, flatSelection, layer1S
     } else if (mode === "armor") {
       camera.position.set(2.4, 1.1, 3.0);
       camera.lookAt(0, 0.05, 0);
-      const head = buildLimb(rotatingGroup, { pw: 8, ph: 8, pd: 8, x: 0, y: 0.75, z: 0, u: 0, v: 0, imgW: 64, imgH: 32 });
-      const body = buildLimb(rotatingGroup, { pw: 8, ph: 12, pd: 4, x: 0, y: 0.125, z: 0, u: 16, v: 16, imgW: 64, imgH: 32 });
-      const armR = buildLimb(rotatingGroup, { pw: 4, ph: 12, pd: 4, x: -0.375, y: 0.125, z: 0, u: 40, v: 16, imgW: 64, imgH: 32 });
-      const armL = buildLimb(rotatingGroup, { pw: 4, ph: 12, pd: 4, x: 0.375, y: 0.125, z: 0, u: 40, v: 16, imgW: 64, imgH: 32, mirror: true });
-      const legR = buildLimb(rotatingGroup, { pw: 4, ph: 12, pd: 4, x: -0.125, y: -0.625, z: 0, u: 0, v: 16, imgW: 64, imgH: 32 });
-      const legL = buildLimb(rotatingGroup, { pw: 4, ph: 12, pd: 4, x: 0.125, y: -0.625, z: 0, u: 0, v: 16, imgW: 64, imgH: 32, mirror: true });
+      const head = buildLimb(rotatingGroup, { pw: 8, ph: 8, pd: 8, x: 0, y: 0.75, z: 0, u: 0, v: 0 });
+      const body = buildLimb(rotatingGroup, { pw: 8, ph: 12, pd: 4, x: 0, y: 0.125, z: 0, u: 16, v: 16 });
+      const armR = buildLimb(rotatingGroup, { pw: 4, ph: 12, pd: 4, x: -0.375, y: 0.125, z: 0, u: 40, v: 16 });
+      const armL = buildLimb(rotatingGroup, { pw: 4, ph: 12, pd: 4, x: 0.375, y: 0.125, z: 0, u: 40, v: 16, mirror: true });
+      const legR = buildLimb(rotatingGroup, { pw: 4, ph: 12, pd: 4, x: -0.125, y: -0.625, z: 0, u: 0, v: 16 });
+      const legL = buildLimb(rotatingGroup, { pw: 4, ph: 12, pd: 4, x: 0.125, y: -0.625, z: 0, u: 0, v: 16, mirror: true });
       rotatingGroup.userData.armorParts = { head, body, armR, armL, legR, legL };
     } else {
       // "flat" : placeholder neutre en attendant la voxelisation (ou si pas
@@ -267,6 +283,27 @@ export default function Preview3D({ mode, faceSelections, flatSelection, layer1S
         const mat1 = layer1Tex ? new THREE.MeshStandardMaterial({ map: layer1Tex }) : fallbackMat();
         const mat2 = layer2Tex ? new THREE.MeshStandardMaterial({ map: layer2Tex }) : fallbackMat();
         const { head, body, armR, armL, legR, legL } = rotatingGroup.userData.armorParts;
+
+        // L'UV se calcule avec la taille RÉELLE du fichier chargé (souvent
+        // 64x32, mais peut être plus grand pour un pack HD) plutôt qu'une
+        // valeur supposée en dur -> évite un mapping faux si le fichier n'a
+        // pas exactement la taille attendue.
+        function applyLayerUV(mesh, tex) {
+          if (!tex?.image) return;
+          applyBoxUV(mesh.geometry, { ...mesh.userData.uvSpec, imgW: tex.image.width, imgH: tex.image.height });
+        }
+
+        if (layer1Tex) {
+          applyLayerUV(head, layer1Tex);
+          applyLayerUV(body, layer1Tex);
+          applyLayerUV(armR, layer1Tex);
+          applyLayerUV(armL, layer1Tex);
+        }
+        if (layer2Tex) {
+          applyLayerUV(legR, layer2Tex);
+          applyLayerUV(legL, layer2Tex);
+        }
+
         head.material = mat1;
         body.material = mat1;
         armR.material = mat1;

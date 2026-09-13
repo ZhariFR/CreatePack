@@ -18,6 +18,7 @@ export default function App() {
     clearTarget,
     clearTargets,
     clearAll,
+    importSelections,
     asPackSelections,
     count,
   } = useSelections();
@@ -74,6 +75,7 @@ export default function App() {
           selections={selections}
           onClear={clearTarget}
           onClearAll={clearAll}
+          onImport={importSelections}
         />
       </div>
 
