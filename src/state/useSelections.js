@@ -2,8 +2,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { assetUrl } from "../lib/assetPath.js";
 import { loadSelections, saveSelections } from "../lib/selectionsStorage.js";
 
-// Gère la sélection de texture par cible (slot, face, ou set). Sauvegarde
-// et restaure automatiquement depuis le navigateur.
+/**
+ * Gère la sélection de texture pour chaque "cible" (un slot simple, ou une
+ * face d'un slot multi-face — voir slotTargets.js). Sauvegarde/restaure
+ * automatiquement depuis le navigateur. Retourne un objet indexé par
+ * targetPath, exactement le format attendu par packBuilder.buildPack().
+ */
 export function useSelections() {
   // { [targetKey]: { targetPath, source: "library"|"upload", url?, file?, label } }
   const [selections, setSelections] = useState({});
@@ -51,8 +55,8 @@ export function useSelections() {
     }));
   }, []);
 
-  // Sélectionne un "set" complet de la bibliothèque : un seul choix qui
-  // produit plusieurs fichiers à la fois.
+  // Sélectionne un "set" complet de la bibliothèque (voir slotTargets.js /
+  // armor.js) : un seul choix qui produit plusieurs fichiers à la fois.
   const selectSetVariant = useCallback((slot, variant) => {
     const outputs = slot.outputs.map((output) => ({
       targetPath: output.targetPath,
@@ -71,8 +75,11 @@ export function useSelections() {
     }));
   }, []);
 
-  // Set uploadé par l'utilisateur (files = { [outputKey]: File }). Pas
-  // besoin de fournir tous les outputs : ce qui manque reste vanilla.
+  // Sélectionne un set complet UPLOADÉ par l'utilisateur (files = objet
+  // { [outputKey]: File }). Pas besoin de fournir TOUS les outputs du slot :
+  // ex. ne donner que le rendu porté (layer1/layer2) sans toucher aux
+  // icônes est volontairement possible — ce qui n'est pas fourni reste
+  // simplement vanilla dans le pack généré.
   const selectSetUpload = useCallback((slot, { label, files }) => {
     const providedOutputs = slot.outputs.filter((output) => files[output.key]);
     const outputs = providedOutputs.map((output) => ({
@@ -119,6 +126,11 @@ export function useSelections() {
     setSelections({});
   }, []);
 
+  // Remplace toute la sélection d'un coup (utilisé par l'import de fichier).
+  const importSelections = useCallback((restored) => {
+    setSelections(restored);
+  }, []);
+
   // Reformate pour packBuilder.buildPack : { [targetPath]: Selection }
   const asPackSelections = useMemo(() => {
     const out = {};
@@ -150,6 +162,7 @@ export function useSelections() {
     clearTarget,
     clearTargets,
     clearAll,
+    importSelections,
     asPackSelections,
     count,
   };
